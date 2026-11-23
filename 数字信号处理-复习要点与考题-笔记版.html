@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数字信号处理 · 复习要点、考题与笔记（DSP）</title>
+<meta name="description" content="数字信号处理（DSP）复习要点、考题清单与课堂笔记，按章编排，选项卡切换。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f7f7f4'/%3E%3Cpath d='M2 16h4l3-9 4 18 4-14 4 11 3-6h6' fill='none' stroke='%2315405e' stroke-width='2.2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;500;700&amp;family=Noto+Sans+SC:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://fastly.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://fastly.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --desk:#e8eae5;
+  --paper:#fdfdfb;
+  --paper-a:rgba(253,253,251,.9);
+  --ink:#16222c;
+  --ink-2:#445560;
+  --ink-3:#7b878c;
+  --rule:#d9ded9;
+  --rule-soft:#eceee9;
+  --blue:#15405e;
+  --brick:#a2402a;
+  --wash:#f1f4f2;
+  --serif:"Noto Serif SC","Songti SC","Source Han Serif SC","SimSun",serif;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --read-fs:16px;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none !important}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;
+  background:
+    linear-gradient(180deg, rgba(21,64,94,.04), rgba(21,64,94,0) 380px),
+    var(--desk);
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:var(--read-fs);
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(22,34,44,.028) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(22,34,44,.028) 0 1px, transparent 1px 26px);
+}
+
+/* ===== 顶栏 ===== */
+.bar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;gap:12px;
+  padding:9px 18px;background:var(--paper-a);
+  border-bottom:1px solid var(--rule);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.bar .bt{
+  font-family:var(--sans);font-size:12.5px;letter-spacing:.12em;color:var(--ink-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;
+}
+.fsbtn{
+  flex:0 0 auto;appearance:none;border:1px solid #cfd7d6;background:var(--wash);color:var(--blue);
+  font-family:var(--sans);font-size:12.5px;letter-spacing:.04em;padding:6px 12px;min-height:34px;cursor:pointer;
+}
+.fsbtn:hover{background:#e7eeec;border-color:#b9c6c5}
+.fsbtn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* ===== 纸页 ===== */
+.sheet{
+  position:relative;z-index:1;
+  width:min(100%, 900px);
+  margin:22px auto 56px;
+  padding:40px clamp(20px,4.6vw,56px) 36px;
+  background:var(--paper);
+  border:1px solid #dfe2dc;
+  box-shadow:0 1px 0 #fff inset, 0 18px 34px -26px rgba(22,34,44,.42);
+}
+
+/* ===== 页头 ===== */
+.kicker{
+  margin:0 0 12px;font-family:var(--sans);font-size:11.5px;font-weight:500;
+  letter-spacing:.08em;color:var(--ink-3);line-height:1.8;
+}
+.sheet-head{padding-bottom:16px;border-bottom:2px solid var(--ink);position:relative}
+.sheet-head::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:1px;background:var(--ink);opacity:.55}
+h1{
+  margin:0;font-size:clamp(20px,4.6vw,28px);font-weight:700;line-height:1.34;letter-spacing:-.01em;
+  word-break:break-word;
+}
+h1 .h1-sub{display:block;margin-top:7px;font-size:.62em;font-weight:500;color:var(--ink-2);letter-spacing:.02em}
+.wave{display:block;width:100%;height:44px;margin:20px 0 0}
+
+/* ===== 选项卡 ===== */
+.tabs{
+  display:flex;gap:0;margin:6px 0 0;border-bottom:1px solid var(--rule);
+  overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;appearance:none;border:0;background:transparent;cursor:pointer;
+  font-family:var(--sans);font-size:13.5px;letter-spacing:.06em;color:var(--ink-3);
+  padding:13px 0;margin-right:28px;min-height:44px;border-bottom:2px solid transparent;
+}
+.tab.on{color:var(--blue);font-weight:500;border-bottom-color:var(--blue)}
+.tab:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+
+/* ===== 概览 ===== */
+.overview{
+  display:flex;flex-wrap:wrap;gap:6px 26px;align-items:baseline;
+  margin:22px 0 0;font-family:var(--sans);font-size:12.5px;color:var(--ink-2);letter-spacing:.02em;
+}
+.overview strong{font-family:var(--serif);font-weight:500;color:var(--brick);margin-right:5px}
+
+/* ===== 小节标题 ===== */
+.section-head{
+  display:flex;align-items:baseline;gap:14px;
+  margin:40px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--rule);
+  scroll-margin-top:64px;
+}
+h2{margin:0;font-size:18px;font-weight:700;letter-spacing:.02em;line-height:1.45}
+.section-head .aside{
+  margin:0 0 0 auto;font-family:var(--sans);font-size:11.5px;color:var(--ink-3);
+  letter-spacing:.04em;white-space:nowrap;
+}
+
+/* ===== 章节跳转 ===== */
+.chips{
+  display:flex;gap:8px;overflow-x:auto;margin:16px -20px 0;
+  padding:0 20px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+@media (min-width:768px){.chips{margin:16px 0 0;padding:0 0 6px}}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;display:inline-flex;align-items:center;min-height:34px;
+  padding:6px 12px;border:1px solid #cfd7d6;background:var(--wash);color:var(--blue);
+  text-decoration:none;font-family:var(--sans);font-size:12.5px;line-height:1.2;white-space:nowrap;
+}
+.chip:active{background:#e7eeec}
+
+/* ===== 覆盖清单 ===== */
+.cover{list-style:none;margin:12px 0 0;padding:0}
+.cover li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--rule-soft)}
+.cover li:first-child{border-top:1px solid var(--rule)}
+.cover .cidx{font-family:var(--serif);font-size:15px;color:var(--brick);font-variant-numeric:tabular-nums;text-align:right}
+.cover .cdesc{font-family:var(--sans);font-size:12.5px;line-height:1.7;color:var(--ink-2)}
+.cover .cdesc b{display:block;font-family:var(--serif);font-size:14.5px;font-weight:500;color:var(--ink);margin-bottom:1px}
+
+/* ===== 考点条目 ===== */
+.req{list-style:none;margin:0;padding:0}
+.req li{position:relative;padding:7px 0 7px 19px;font-size:15px;line-height:1.88}
+.req li::before{content:"";position:absolute;left:0;top:15px;width:5px;height:5px;background:var(--blue)}
+.tag{
+  display:inline-block;font-family:var(--sans);font-size:11px;line-height:1.55;
+  padding:1px 6px;border:1px solid #dfe4e1;color:var(--ink-2);white-space:nowrap;vertical-align:2px;
+}
+.tag.pg{color:var(--blue);border-color:#c3d3d8}
+.quote{
+  margin:12px 0 0;font-family:var(--sans);font-size:12.5px;line-height:1.8;color:var(--ink-3);
+  padding-left:12px;border-left:2px solid var(--rule);
+}
+.nb{white-space:nowrap}
+
+/* ===== 公式块 ===== */
+.eq{
+  margin:14px 0 18px;padding:12px 16px 13px;
+  background:var(--wash);border-top:1px solid #e2eae7;border-bottom:1px solid #e2eae7;
+  overflow-x:auto;overflow-y:hidden;font-size:.95em;
+}
+.eq .cap{
+  display:block;margin-top:4px;font-family:var(--sans);font-size:12px;
+  line-height:1.7;color:var(--ink-2);
+}
+.katex{font-size:.98em}
+.katex-display{margin:.35em 0;overflow-x:auto;overflow-y:hidden;text-align:center}
+
+/* ===== 考题清单 ===== */
+.toolbar{display:flex;align-items:center;margin:0 0 2px}
+.toggle{
+  margin-left:auto;font-family:var(--sans);font-size:12.5px;letter-spacing:.04em;
+  color:var(--blue);background:var(--wash);border:1px solid #cfd7d6;
+  padding:7px 14px;min-height:38px;cursor:pointer;
+  transition:background .15s ease,border-color .15s ease;
+}
+.toggle:hover{background:#e7eeec;border-color:#b9c6c5}
+.toggle:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+.list{margin:0;padding:0;list-style:none}
+.q{
+  display:grid;grid-template-columns:82px minmax(0,1fr);gap:0 22px;
+  padding:22px 0 24px;border-bottom:1px solid var(--rule-soft);break-inside:avoid;
+}
+.q:first-of-type{border-top:1px solid var(--rule)}
+.q:last-of-type{border-bottom:none;padding-bottom:6px}
+.mark{display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding-top:2px}
+.mark .num{
+  font-family:var(--serif);font-size:32px;font-weight:500;line-height:1;
+  color:var(--brick);font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+}
+.mark .tag{
+  font-family:var(--sans);font-size:10.5px;line-height:1.5;letter-spacing:.06em;
+  color:var(--ink-2);border-top:1px solid var(--rule);padding-top:6px;width:100%;
+}
+.stem{
+  margin:0 0 10px;font-size:18px;line-height:1.85;font-weight:500;letter-spacing:.01em;
+  overflow-wrap:break-word;
+}
+.stem .katex{font-size:.96em}
+.annot{
+  margin:0;font-family:var(--sans);font-size:12px;line-height:1.7;color:var(--ink-2);
+  display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;
+}
+.annot .lab{
+  font-size:10.5px;letter-spacing:.12em;color:#97a2a5;
+  border:1px solid #dfe4e1;padding:1px 6px;white-space:nowrap;
+}
+.hint{
+  margin-top:12px;background:var(--wash);border-top:1px solid #e2eae7;padding:13px 16px 14px;
+}
+.hint .lab{
+  display:block;font-family:var(--sans);font-size:10.5px;letter-spacing:.14em;
+  color:var(--ink-3);margin-bottom:2px;
+}
+.hint .formula{
+  margin:2px 0 0;overflow-x:auto;overflow-y:hidden;font-size:15.5px;
+  padding:2px 0 3px;text-align:center;
+}
+.hint .tip{
+  margin:8px 0 0;font-family:var(--sans);font-size:12.5px;line-height:1.78;
+  color:var(--ink-2);overflow-wrap:anywhere;
+}
+.hints-off .hint{display:none}
+
+/* ===== 笔记正文 ===== */
+.np{margin:.55em 0;font-size:.95em;line-height:1.95}
+.nsub{display:flex;align-items:baseline;gap:10px;margin:26px 0 6px;font-size:15.5px;font-weight:700;letter-spacing:.01em}
+.nsub .sn{font-family:var(--sans);font-size:11.5px;font-weight:500;color:var(--brick);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.kwrap{overflow-x:auto;margin:14px 0 18px}
+.tbl{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:12.5px;line-height:1.7}
+.tbl th,.tbl td{border-bottom:1px solid var(--rule-soft);padding:8px 10px;text-align:left;vertical-align:top}
+.tbl thead th{border-bottom:1px solid var(--rule);font-weight:500;color:var(--blue);letter-spacing:.04em;background:#f6f8f4;white-space:nowrap}
+.tbl td:first-child{font-family:var(--serif);font-size:14px;white-space:nowrap}
+.tbl .num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.proof{margin:14px 0 18px;padding:13px 15px 7px;border:1px solid var(--rule);background:#fff}
+.proof .plab{display:block;margin-bottom:6px;font-family:var(--sans);font-size:10.5px;letter-spacing:.16em;color:var(--ink-3)}
+.steps{margin:0;padding:0;list-style:none;counter-reset:st}
+.steps li{position:relative;padding:4px 0 4px 25px;font-size:14.5px;line-height:1.85;counter-increment:st}
+.steps li::before{
+  content:counter(st);position:absolute;left:0;top:7px;width:18px;height:18px;line-height:16px;text-align:center;
+  font-family:var(--sans);font-size:11px;color:var(--brick);border:1px solid #e3c9bf;
+}
+@media (max-width:560px){.tbl{min-width:520px}}
+
+/* ===== 页脚 ===== */
+.sheet-foot{
+  margin-top:44px;padding-top:14px;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:11.5px;line-height:1.9;color:var(--ink-3);
+  display:flex;flex-wrap:wrap;gap:6px 30px;justify-content:space-between;
+}
+
+/* ===== 窄屏 ===== */
+@media (max-width:860px){
+  .sheet{margin:0;border-left:none;border-right:none;padding:30px 18px 30px}
+  .chips{margin-left:-18px;margin-right:-18px;padding-left:18px;padding-right:18px}
+  .q{grid-template-columns:48px minmax(0,1fr);gap:0 14px}
+  .mark .num{font-size:25px}
+  .mark .tag{font-size:9.5px}
+  .stem{font-size:16.5px}
+  .hint{padding:11px 13px}
+  .hint .formula{font-size:14px}
+  .section-head{margin-top:34px;flex-wrap:wrap;gap:2px 12px}
+  .section-head .aside{order:2;flex-basis:100%;margin-left:0;font-size:11px}
+  h2{font-size:16.5px}
+}
+@media (max-width:520px){
+  .q{grid-template-columns:1fr;gap:0}
+  .mark{flex-direction:row;align-items:baseline;gap:10px;margin-bottom:9px;padding-top:0}
+  .mark .num{font-size:24px}
+  .mark .tag{border-top:none;padding-top:0;width:auto;font-size:10px;color:var(--ink-3)}
+  .stem{font-size:16px;line-height:1.8}
+  h1{font-size:19px}
+  h1 .h1-sub{font-size:.72em}
+  .overview{gap:6px 18px}
+  .req li{padding-left:17px;font-size:14.5px}
+}
+@media print{
+  @page{margin:16mm 14mm}
+  body{background:#fff}
+  body::after{display:none}
+  .bar,.chips,.toolbar{display:none}
+  .sheet{width:100%;margin:0;border:none;box-shadow:none;padding:0}
+  .hints-off .hint{display:block}
+  .q{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span class="bt">数字信号处理 · 复习要点、考题与笔记</span>
+  <button class="fsbtn" id="fsBtn" type="button" aria-label="切换正文字号">字号 16</button>
+</div>
+
+<main class="sheet">
+
+  <header class="sheet-head">
+    <p class="kicker">2026-2027 学年秋季学期 · 航空学院专业选修课程 U01M11068 数字信号处理</p>
+    <h1>复习要点-重点笔记-考题开源
+      <span class="h1-sub">第 1—7 章按章考点 · 10 道考题 · 手写笔记整理</span>
+    </h1>
+  </header>
+
+  <svg class="wave" viewBox="0 0 320 40" preserveAspectRatio="none" aria-hidden="true">
+    <line x1="0" y1="34" x2="320" y2="34" stroke="#c9d1cf" stroke-width="1"/>
+    <g stroke="#15405e" stroke-width="1.1">
+      <line x1="14" y1="34" x2="14" y2="24"/><line x1="40" y1="34" x2="40" y2="10"/>
+      <line x1="66" y1="34" x2="66" y2="18"/><line x1="92" y1="34" x2="92" y2="6"/>
+      <line x1="118" y1="34" x2="118" y2="20"/><line x1="144" y1="34" x2="144" y2="30"/>
+      <line x1="170" y1="34" x2="170" y2="16"/><line x1="196" y1="34" x2="196" y2="8"/>
+      <line x1="222" y1="34" x2="222" y2="22"/><line x1="248" y1="34" x2="248" y2="12"/>
+      <line x1="274" y1="34" x2="274" y2="26"/><line x1="300" y1="34" x2="300" y2="18"/>
+    </g>
+    <g fill="#a2402a">
+      <circle cx="14" cy="23" r="1.8"/><circle cx="40" cy="9" r="1.8"/>
+      <circle cx="66" cy="17" r="1.8"/><circle cx="92" cy="5" r="1.8"/>
+      <circle cx="118" cy="19" r="1.8"/><circle cx="144" cy="29" r="1.8"/>
+      <circle cx="170" cy="15" r="1.8"/><circle cx="196" cy="7" r="1.8"/>
+      <circle cx="222" cy="21" r="1.8"/><circle cx="248" cy="11" r="1.8"/>
+      <circle cx="274" cy="25" r="1.8"/><circle cx="300" cy="17" r="1.8"/>
+    </g>
+  </svg>
+
+  <nav class="tabs" role="tablist" aria-label="内容切换">
+    <button class="tab on" type="button" role="tab" data-view="d" id="tab-d">复习要点</button>
+    <button class="tab" type="button" role="tab" data-view="q" id="tab-q">考题</button>
+    <button class="tab" type="button" role="tab" data-view="n" id="tab-n">笔记</button>
+  </nav>
+
+  <!-- ================= 视图：复习要点 ================= -->
+  <div id="view-d" role="tabpanel" aria-labelledby="tab-d">
+
+    <p class="overview">
+      <span><strong>考试结构</strong>10 道题 · 每题 10 分</span>
+      <span><strong>范围</strong>第 1—7 章</span>
+      <span><strong>篇幅</strong>按章考点、页码、例题与习题</span>
+    </p>
+
+    <div class="chips" aria-label="章节跳转">
+      <a class="chip" href="#r1">第一章</a>
+      <a class="chip" href="#r2">第二章</a>
+      <a class="chip" href="#r3">第三章</a>
+      <a class="chip" href="#r4">第四章</a>
+      <a class="chip" href="#r5">第五章</a>
+      <a class="chip" href="#r6">第六章</a>
+      <a class="chip" href="#r7">第七章</a>
+    </div>
+
+    <ul class="cover">
+      <li><span class="cidx">1</span><span class="cdesc"><b>序列、卷积、单位脉冲响应</b>11 · 14 · 45 页　习题 8、11、12</span></li>
+      <li><span class="cidx">2</span><span class="cdesc"><b>DTFT、DTFS、Z 变换</b>48–49 · 64 · 68–69 · 73 · 93 页　例 2.2.1、2.5.6、2.5.7　习题 10、11、16、18、20、22</span></li>
+      <li><span class="cidx">3</span><span class="cdesc"><b>DFT</b>3.1.1 式 · 97 · 103 · 105–106 页　例 3.1.1、3.2.1　频域卷积定理、频率采样定理</span></li>
+      <li><span class="cidx">4</span><span class="cdesc"><b>FFT</b>计算量对比：直接算 <span class="math" data-fb="N²">\(N^{2}\)</span> 与基 2 的 <span class="math" data-fb="(N/2)log₂N">\((N/2)\log_{2}N\)</span></span></li>
+      <li><span class="cidx">5</span><span class="cdesc"><b>数字滤波器结构</b>直接型（IIR／FIR）、级联型、并联型</span></li>
+      <li><span class="cidx">6</span><span class="cdesc"><b>IIR 滤波器设计</b>186 页 例 6.2.1　215 页 例 6.4.1　习题 1、3、4、5</span></li>
+      <li><span class="cidx">7</span><span class="cdesc"><b>FIR 窗函数法</b>243 页 例 7.2.1　吉布斯效应</span></li>
+    </ul>
+
+    <div class="section-head" id="r1">
+      <h2>第一章 · 序列、卷积与单位脉冲响应</h2>
+      <p class="aside">11 · 14 · 45 页</p>
+    </div>
+
+    <ul class="req">
+      <li>序列的尺度变换 <span class="tag pg">11 页</span>：<span class="math" data-fb="x(n) → x(2n)">\(x(n)\to x(2n)\)</span> 是抽取，采样率降一半，频谱展宽一倍并叠加，可能混叠；<span class="math" data-fb="x(n) → x(n/2)">\(x(n)\to x(n/2)\)</span> 是补零内插，频谱压缩一倍、出现镜像。要能画图说清原来那根谱线跑哪去了。</li>
+      <li>卷积 <span class="tag pg">14 页</span>：图解法（翻褶、平移、相乘、求和）与列表法都要会。教材 1.3.4 那种纯硬算的题不会出，考的是能用 δ 性质化简的。</li>
+      <li>单位脉冲响应 <span class="tag pg">45 页</span>：给一个常系数差分方程求 <span class="math" data-fb="h(n)">\(h(n)\)</span>，对应课后 11、12 题；卷积对应第 8 题。</li>
+      <li>采样定理不考——信号与系统已经考过，避免重复。</li>
+    </ul>
+
+    <div class="eq" data-fb="y(n) = x(n) * h(n) = Σ x(m)h(n−m)　；　x(n) * δ(n−n0) = x(n−n0)">
+      \[ y(n)=x(n)*h(n)=\sum_{m=-\infty}^{\infty}x(m)\,h(n-m) \]
+      \[ x(n)*\delta(n-n_{0})=x(n-n_{0}) \]
+      <span class="cap">卷积定义，以及考试里最省事的那条性质：与 δ 卷积等于平移。</span>
+    </div>
+
+    <div class="section-head" id="r2">
+      <h2>第二章 · DTFT、DTFS 与 Z 变换</h2>
+      <p class="aside">48–49 · 64 · 68–69 · 73 · 93 页</p>
+    </div>
+
+    <ul class="req">
+      <li>DTFT 正变换与逆变换 <span class="tag pg">48–49 页</span>：教材上手就给式子，课上花了大功夫推 48 页的逆变换，<span class="tag pg">例 2.2.1</span> 要能独立推一遍。</li>
+      <li>对称性 <span class="tag pg">91 页 习题 10、11</span>：DTFT 那一堆性质里，线性、时移、频移都常规，真正要紧的是对称性，这两道题是它的直观形式。</li>
+      <li>DTFS 基本没讲，不考。</li>
+      <li>Z 变换的收敛域 <span class="tag pg">64 页</span>：序列特性决定 ROC，是本章难点，把下面四类背下来。</li>
+      <li>留数法求逆 Z 变换 <span class="tag pg">68–69 页</span>：<span class="tag pg">例 2.5.6、2.5.7</span>。别照例题直接抄结果，要写出留数怎么算。</li>
+      <li>初值定理、终值定理 <span class="tag pg">73 页 6、7 条</span>：这两个是 Z 变换独有的，别的变换没有对应物。</li>
+      <li>用 Z 变换分析系统 <span class="tag pg">93 页 习题 20、22</span>：变换只是工具，能拿它去分析系统才是重点。</li>
+    </ul>
+
+    <div class="eq" data-fb="X(e^jω) = Σ x(n)e^(−jωn)　；　x(n) = 1/2π ∫ X(e^jω)e^(jωn) dω">
+      \[ X(e^{j\omega})=\sum_{n=-\infty}^{\infty}x(n)e^{-j\omega n} \]
+      \[ x(n)=\frac{1}{2\pi}\int_{2\pi}X(e^{j\omega})e^{j\omega n}\,\mathrm{d}\omega \]
+      <span class="cap">DTFT 正变换与反变换。反变换的推导就是例 2.2.1 那道题。</span>
+    </div>
+
+    <ul class="req">
+      <li>收敛域四类速查：有限长序列——整个 z 平面（除可能的 0 与 ∞）；右边序列——<span class="math" data-fb="|z| > r">\(|z|\gt r\)</span> 圆外；左边序列——<span class="math" data-fb="|z| < r">\(|z|\lt r\)</span> 圆内；双边序列——环状 <span class="math" data-fb="r₁ < |z| < r₂">\(r_{1}\lt |z|\lt r_{2}\)</span>。</li>
+    </ul>
+
+    <div class="eq" data-fb="x(n) = Σ Res[ X(z)z^(n−1) ]　；　x(0) = lim(z→∞) X(z)　；　x(∞) = lim(z→1)(z−1)X(z)">
+      \[ x(n)=\sum_{\text{极点 }z_k}\mathrm{Res}\left[X(z)z^{n-1}\right] \]
+      \[ x(0)=\lim_{z\to\infty}X(z)\ ,\qquad x(\infty)=\lim_{z\to1}(z-1)X(z) \]
+      <span class="cap">留数法求逆变换；初值定理（因果序列）；终值定理（极点须在单位圆内才成立）。</span>
+    </div>
+
+    <p class="quote">课后习题：10、11、16、18　以及 20、22（用 Z 变换分析系统）</p>
+    <p class="quote">“我不希望大家用留数法直接去写结果，不要按照这个例题上面去做。”</p>
+
+    <div class="section-head" id="r3">
+      <h2>第三章 · DFT</h2>
+      <p class="aside">3.1.1 式 · 97 · 103 · 105–106 页</p>
+    </div>
+
+    <ul class="req">
+      <li>3.1.1 式的来源 <span class="tag pg">3.1.1</span>：课上两节课专门讲这个式子怎么来的，两条路都要清楚——频域对 DTFT 等间隔采样，等价于时域周期延拓再取主值。</li>
+      <li>4 点、8 点 DFT 手算 <span class="tag pg">例 3.1.1</span>：小点数要能直接写出 <span class="math" data-fb="X(k)">\(X(k)\)</span>，别只记公式。</li>
+      <li>物理含义 <span class="tag pg">97 页</span>：DFT 就是 DTFT 在单位圆上的 N 点等间隔采样，也就是 z 变换在单位圆上的取样。</li>
+      <li>循环移位 <span class="tag pg">105 页</span>：怎么移都不出 <span class="math" data-fb="0 ~ N−1">\(0\sim N-1\)</span>，靠模 N 折回来。</li>
+      <li>对称性 <span class="tag pg">106 页 3.2.16</span>：圆周共轭对称分量与圆周共轭反对称分量。实部、虚部的写法跟第二章一样，变的是共轭对称那一对。</li>
+      <li>循环卷积等于线性卷积的条件：点数 <span class="math nb" data-fb="N ≥ N₁ + N₂ − 1">\(N\ge N_{1}+N_{2}-1\)</span>，好记，别记错方向。</li>
+      <li><span class="tag pg">例 3.2.1</span>（103 页）是重点例题，课上点名让好几个人分析过。</li>
+      <li>频域卷积定理：结论要背，推导过程也要能展开，答题别只给一行。</li>
+      <li>频率采样定理：要把“怎么回事”讲清楚，写出自己的理解，不能一句结论了事。</li>
+    </ul>
+
+    <div class="eq" data-fb="X(k) = Σ(n=0..N−1) x(n) W_N^(nk)　，　W_N = e^(−j2π/N)">
+      \[ X(k)=\sum_{n=0}^{N-1}x(n)W_{N}^{nk}\ ,\qquad W_{N}=e^{-j2\pi/N} \]
+      <span class="cap">DFT 定义式（即 3.1.1）。反变换差一个 1/N 和 W 的负指数。</span>
+    </div>
+
+    <div class="eq" data-fb="x((n+m))_N　：对 n+m 取模 N　；　DFT 对称性里 (−n)_N 也是取模 N，所以表达式里带 N">
+      \[ x\big((n+m)\big)_{N} \]
+      <span class="cap">循环移位的写法。第三章对称性比第二章多出一个 N，就是因为它写的是 <span class="math" data-fb="(−n)_N">\((-n)_{N}\)</span>：横轴取模折回，等于说时域做了 N 点周期延拓。</span>
+    </div>
+
+    <div class="section-head" id="r4">
+      <h2>第四章 · FFT</h2>
+      <p class="aside">计算量对比</p>
+    </div>
+
+    <ul class="req">
+      <li>FFT 没有新东西，是一种算法层面的数学变换。</li>
+      <li>计算量对比要能说清“为什么”：直接算 N 点 DFT 要 <span class="math" data-fb="N²">\(N^{2}\)</span> 次复数乘法；基 2 FFT 分成 <span class="math" data-fb="log₂N">\(\log_{2}N\)</span> 级、每级 <span class="math" data-fb="N/2">\(N/2\)</span> 个蝶形，共 <span class="math" data-fb="(N/2)log₂N">\((N/2)\log_{2}N\)</span> 次。N=1024 时是 1 048 576 比 5 120，差两百倍。</li>
+      <li>不要求现场推 FFT 公式，也不要求现场画蝶形流图。</li>
+    </ul>
+
+    <p class="quote">“考试题我们就 10 道题，每一道题 10 分，你光几行话那肯定就够不上 10 分。”</p>
+
+    <div class="section-head" id="r5">
+      <h2>第五章 · 数字滤波器结构</h2>
+      <p class="aside">IIR／FIR 直接型</p>
+    </div>
+
+    <ul class="req">
+      <li>直接型必须会画：IIR 直接Ⅰ型、直接Ⅱ型，以及 FIR 的直接型（横截型）。这两套画法别混。</li>
+      <li>级联型、并联型：先把 <span class="math" data-fb="H(z)">\(H(z)\)</span> 因式分解，按分解出来的二阶节画就行，没有额外技巧。</li>
+      <li>会从差分方程／系统函数读出系数，直接落到图上对应位置。</li>
+    </ul>
+
+    <div class="section-head" id="r6">
+      <h2>第六章 · IIR 数字滤波器设计</h2>
+      <p class="aside">186 · 215 页</p>
+    </div>
+
+    <ul class="req">
+      <li>高通、带通、低通、带阻四类滤波器的特点（幅频形状，通带波纹与阻带衰减指标）。</li>
+      <li>设计低通滤波器的步骤：课本 <span class="tag pg">186 页 例 6.2.1</span>。</li>
+      <li>掌握脉冲响应不变法设计数字滤波器的思路。</li>
+      <li>掌握双线性变换法设计数字滤波器的思路；掌握两次一对一映射把 s 全平面一对一映射到 z 域的思路，课本 <span class="tag pg">215 页 例 6.4.1</span>。</li>
+      <li>课后习题：1、3、4、5。</li>
+    </ul>
+
+    <div class="section-head" id="r7">
+      <h2>第七章 · FIR 窗函数法</h2>
+      <p class="aside">243 页</p>
+    </div>
+
+    <ul class="req">
+      <li>掌握吉布斯效应。</li>
+      <li>看一看课本 <span class="tag pg">243 页 例 7.2.1</span>。</li>
+    </ul>
+
+  </div>
+
+  <!-- ================= 视图：考题 ================= -->
+  <div id="view-q" role="tabpanel" aria-labelledby="tab-q" hidden>
+
+    <p class="overview">
+      <span><strong>计算</strong>3 条（递推、滤波器设计、自相关变换）</span>
+      <span><strong>证明与推导</strong>2 条</span>
+      <span><strong>概念与简答</strong>4 条</span>
+      <span><strong>结构图</strong>1 条</span>
+    </p>
+
+    <div class="section-head">
+      <h2>考题清单</h2>
+      <p class="aside">题干为规范表述，另附课后题出处</p>
+    </div>
+
+    <div class="toolbar">
+      <button id="hintToggle" class="toggle" type="button" aria-pressed="false">
+        <span>隐藏考点提示</span>
+      </button>
+    </div>
+
+    <ol class="list" id="questionList">
+
+      <li class="q">
+        <div class="mark"><span class="num">01</span><span class="tag">计算 · 递推</span></div>
+        <div>
+          <p class="stem">已知线性时不变系统的差分方程，在零初始条件下用递推法求系统的单位脉冲响应 \(h(n)\)。</p>
+          <p class="annot"><span class="lab">出处</span><span class="src">课后题 P45 11题</span></p>
+          <div class="hint">
+            <span class="lab">关键式</span>
+            <div class="formula">\[ \begin{aligned} y(n) &= -\sum_{k=1}^{N}a_k\,y(n-k) \\ &\quad +\sum_{m=0}^{M}b_m\,x(n-m) \end{aligned} \]</div>
+            <p class="tip">令输入为 \(\delta(n)\)、输出为 \(h(n)\)，且 \(h(n)=0\;(n\lt 0)\)，由 \(n=0\) 起逐点代入即可。</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="q">
+        <div class="mark"><span class="num">02</span><span class="tag">推导</span></div>
+        <div>
+          <p class="stem">由 \(X(e^{j\omega})\) 的定义式推导离散时间傅里叶逆变换（IDTFT），写出 \(x(n)\) 的表达式。</p>
+          <div class="hint">
+            <span class="lab">关键式</span>
+            <div class="formula">\[ \begin{aligned} X(e^{j\omega}) &= \sum_{n=-\infty}^{\infty}x(n)e^{-j\omega n} \\ x(n) &= \frac{1}{2\pi}\int_{-\pi}^{\pi}X(e^{j\omega})e^{j\omega n}\,\mathrm{d}\omega \end{aligned} \]</div>
+            <p class="tip">推导的支点是 \([-\pi,\pi]\) 上复指数序列的正交性：两侧乘以 \(e^{j\omega m}\) 后积分，非 \(m=n\) 项全部为零。</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="q">
+        <div class="mark"><span class="num">03</span><span class="tag">证明</span></div>
+        <div>
+          <p class="stem">证明 z 变换的终值定理。</p>
+          <div class="hint">
+            <span class="lab">关键式</span>
+            <div class="formula">\[ \lim_{n\to\infty}x(n)=\lim_{z\to 1}\,(z-1)X(z) \]</div>
+            <p class="tip">适用条件须一并写出：\(x(n)\) 为因果序列，且 \((z-1)X(z)\) 的极点全在单位圆内。证明从差分的 \(z\) 变换 \((1-z^{-1})X(z)\) 出发，再将 \(z\to 1\) 取极限，左端级数即 \(\lim_{n\to\infty}x(n)\)。</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="q">
+        <div class="mark"><span class="num">04</span><span class="tag">概念 · 分解</span></div>
+        <div>
+          <p class="stem">写出有限长序列 \(x(n)\) 的实部、虚部、共轭对称分量与共轭反对称分量。</p>
+          <div class="hint">
+            <span class="lab">关键式</span>
+            <div class="formula">\[ \begin{aligned} x_e(n) &= \tfrac{1}{2}\big[x(n)+x^{*}(-n)\big] \\ x_o(n) &= \tfrac{1}{2}\big[x(n)-x^{*}(-n)\big] \end{aligned} \]</div>
+            <p class="tip">实部与虚部：\(x_R(n)=\tfrac{1}{2}[x(n)+x^{*}(n)]\)、\(x_I(n)=\tfrac{1}{2j}[x(n)-x^{*}(n)]\)，且 \(x(n)=x_e(n)+x_o(n)\)；序列为实数时二者退化为偶、奇对称分量。</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="q">
+        <div class="mark"><span class="num">05</span><span class="tag">系统函数 · 结构</span></div>
+        <div>
+          <p class="stem">写出 FIR 系统的系统函数 \(H(z)\)，并画出其直接型网络结构图。</p>
+          <div class="hint">
+            <span class="lab">关键式</span>
+            <div class="formula">\[ \begin{aligned} H(z) &= \sum_{n=0}^{N-1}h(n)z^{-n} \\ y(n) &= \sum_{k=0}^{N-1}h(k)\,x(n-k) \end{aligned} \]</div>
+            <p class="tip">直接型即横向滤波器：\(N-1\) 级单位延迟串联，各级抽头乘以 \(h(k)\) 后相加；无反馈支路，只在 \(z=0\) 处有极点、零点由 \(h(n)\) 决定。</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="q">
+        <div class="mark"><span class="num">06</span><span class="tag">概念 · 分析</span></div>
+        <div>
+          <p class="stem">分析巴特沃斯（Butterworth）滤波器幅度平方函数的“最大平坦”特性。</p>
+          <div class="hint">
+            <span class="lab">关键式</span>
+            <div class="formula">\[ \big|H_a(j\Omega)\big|^{2}=\frac{1}{1+\left(\Omega/\Omega_c\right)^{2N}} \]</div>
+            <p class="tip">在 \(\Omega=0\) 处前 \(2N-1\) 阶导数均为零，故名最大平坦；阶数 \(N\) 增大则过渡带变陡，但始终单调衰减、无等波纹，与切比雪夫的特性对比常一并考查。</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="q">
+        <div class="mark"><span class="num">07</span><span class="tag">设计 · 计算</span></div>
+        <div>
+          <p class="stem">用脉冲响应不变法与双线性变换法，把 RC 模拟低通滤波器转换为数字滤波器。</p>
+          <div class="hint">
+            <span class="lab">关键式</span>
+            <div class="formula">\[ \begin{aligned} s &= \frac{2}{T}\,\frac{1-z^{-1}}{1+z^{-1}} \\ \Omega_c &= \frac{2}{T}\tan\frac{\omega_c}{2} \end{aligned} \]</div>
+            <p class="tip">脉冲响应不变法取 \(h(n)=T\,h_a(nT)\)，存在频谱混叠，只适用于限带滤波器；双线性变换无混叠，但频率轴非线性畸变，须先按上式预畸变截止频率。</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="q">
+        <div class="mark"><span class="num">08</span><span class="tag">简答 · 成因</span></div>
+        <div>
+          <p class="stem">说明吉布斯（Gibbs）现象产生的原因。</p>
+          <div class="hint">
+            <span class="lab">要点</span>
+            <p class="tip">用有限项傅里叶级数（等价于对理想冲激响应加窗截断）逼近矩形频率特性时，时域相乘即频域卷积，窗谱的旁瓣在通带、阻带的跳变点处叠加出固定幅度的过冲，约 9%。增大项数 \(N\) 只让振荡变密、跳变变陡，过冲幅度不随之消失。</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="q">
+        <div class="mark"><span class="num">09</span><span class="tag">计算 · 变换</span></div>
+        <div>
+          <p class="stem">求自相关函数 \(R_{xx}(m)\) 的 z 变换 \(R_{xx}(z)\)（题中已给出 \(R_{xx}(m)\)）。</p>
+          <p class="annot"><span class="lab">出处</span><span class="src">课后题 P93 20题 · 原稿注“给了”</span></p>
+          <div class="hint">
+            <span class="lab">关键式</span>
+            <div class="formula">\[ \begin{aligned} R_{xx}(m) &= \sum_{n=-\infty}^{\infty}x(n)\,x^{*}(n-m) \\ R_{xx}(z) &= X(z)\,X(z^{-1}) \end{aligned} \]</div>
+            <p class="tip">实序列时 \(R_{xx}(m)\) 为偶函数，其 z 变换关于 \(z\) 与 \(z^{-1}\) 对称，收敛域须跨越单位圆。</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="q">
+        <div class="mark"><span class="num">10</span><span class="tag">定理 · 原理</span></div>
+        <div>
+          <p class="stem">陈述频率域采样定理，说明由频域采样值恢复原序列的原理与条件。</p>
+          <div class="hint">
+            <span class="lab">关键式</span>
+            <div class="formula">\[ \begin{aligned} \tilde{X}(k) &= X\!\left(e^{j\frac{2\pi}{N}k}\right) \\ \tilde{x}(n) &= \sum_{r=-\infty}^{\infty}x(n+rN) \end{aligned} \]</div>
+            <p class="tip">频域 \(N\) 点等间隔采样对应时域以 \(N\) 为周期延拓。序列长度 \(M\) 且 \(N\ge M\) 时无混叠、可无失真恢复；\(N\lt M\) 时延拓部分重叠，无法还原。</p>
+          </div>
+        </div>
+      </li>
+
+    </ol>
+
+  </div>
+
+  <!-- ================= 视图：笔记 ================= -->
+  <div id="view-n" role="tabpanel" aria-labelledby="tab-n" hidden>
+
+    <p class="overview">
+      <span><strong>来源</strong>手写笔记 8 页</span>
+      <span><strong>编排</strong>第 1—7 章 · 23 节</span>
+      <span><strong>内容</strong>定义 · 推导 · 公式 · 表格</span>
+    </p>
+
+    <div class="chips" aria-label="笔记章节跳转">
+      <a class="chip" href="#n1">第 1 章</a>
+      <a class="chip" href="#n2">第 2 章</a>
+      <a class="chip" href="#n3">第 3 章</a>
+      <a class="chip" href="#n4">第 4 章</a>
+      <a class="chip" href="#n5">第 5 章</a>
+      <a class="chip" href="#n6">第 6 章</a>
+      <a class="chip" href="#n7">第 7 章</a>
+    </div>
+
+    <div class="section-head" id="n1">
+      <h2>第一章 · 序列、卷积与单位脉冲响应</h2>
+      <p class="aside">11 · 14 · 45 页</p>
+    </div>
+
+    <p class="nsub"><span class="sn">1.1</span>尺度变换：抽取与补零内插</p>
+    <p class="np"><b>抽取</b> <span class="math" data-fb="x(n) → x(2n)">\(x(n)\to x(2n)\)</span>：隔一个取一个，丢掉奇数点，长度减半；频谱被展宽一倍并叠加，原序列带宽一旦超过 <span class="math" data-fb="π/2">\(\pi/2\)</span> 就会混叠。<b>内插</b> <span class="math" data-fb="x(n) → x(n/2)">\(x(n)\to x(n/2)\)</span>：原样本之间补零，长度加倍；频谱被压缩一半，<span class="math" data-fb="π/2 ~ π">\(\pi/2\sim\pi\)</span> 之间出现镜像。补零不产生新信息，要得到真正的内插值还得再经低通滤波。</p>
+    <div class="eq" data-fb="抽取：Y(e^jω)=1/2[X(e^jω/2)+X(e^j(ω/2−π))]　内插：Y(e^jω)=X(e^j2ω)">
+      \[ Y(e^{j\omega})=\frac{1}{2}\left[X\!\left(e^{j\frac{\omega}{2}}\right)+X\!\left(e^{j\left(\frac{\omega}{2}-\pi\right)}\right)\right] \]
+      \[ Y(e^{j\omega})=X\!\left(e^{j2\omega}\right) \]
+      <span class="cap">上式为二倍抽取，下式为补零内插。答题时配合画图说明原来那根谱线跑到哪去了。</span>
+    </div>
+
+    <p class="nsub"><span class="sn">1.2</span>卷积运算</p>
+    <p class="np"><b>图解法四步</b>：翻褶 <span class="math" data-fb="x₂(m) → x₂(−m)">\(x_2(m)\to x_2(-m)\)</span> → 移位 → 相乘 → 求和；<b>列表法</b>适合两个有限长短序列，逐行错位相乘再按列相加。考试更看重用 δ 的性质化简，纯硬算不作为考点。</p>
+    <div class="eq" data-fb="x(n)*δ(n−n₀)=x(n−n₀)；δ(n)*δ(n)=δ(n)">
+      \[ x(n)*\delta(n-n_0)=x(n-n_0)\ ,\qquad \delta(n)*\delta(n)=\delta(n) \]
+      <span class="cap">与 δ 卷积等于平移，两个序列卷积时先看能不能拆成 δ 的组合。</span>
+    </div>
+    <div class="eq" data-fb="y(n)=Σ x(m)h(n−m)=Σ h(m)x(n−m)">
+      \[ y(n)=x(n)*h(n)=\sum_{m=-\infty}^{\infty}x(m)\,h(n-m)=\sum_{m=-\infty}^{\infty}h(m)\,x(n-m) \]
+      <span class="cap">卷积定义，满足交换律、结合律与对加法的分配律。</span>
+    </div>
+
+    <p class="nsub"><span class="sn">1.3</span>单位脉冲响应的定义</p>
+    <p class="np">系统以 <span class="math" data-fb="δ(n)">\(\delta(n)\)</span> 为输入、在<b>零初始条件</b>下产生的输出响应即 <span class="math" data-fb="h(n)">\(h(n)\)</span>。它只由系统本身决定，与输入无关；知道 <span class="math" data-fb="h(n)">\(h(n)\)</span> 就等于知道了整个 LTI 系统。由差分方程求它时，令 <span class="math" data-fb="x(n)=δ(n)">\(x(n)=\delta(n)\)</span>、<span class="math" data-fb="y(n)=h(n)">\(y(n)=h(n)\)</span>、<span class="math" data-fb="n&lt;0 时 h(n)=0">\(h(n)=0\ (n\lt0)\)</span>，从 <span class="math" data-fb="n=0">\(n=0\)</span> 起逐点递推。</p>
+    <div class="eq" data-fb="y(n)=−Σ(k=1..N) a_k y(n−k) + Σ(m=0..M) b_m x(n−m)">
+      \[ y(n)=-\sum_{k=1}^{N}a_k\,y(n-k)+\sum_{m=0}^{M}b_m\,x(n-m) \]
+      <span class="cap">零状态下 <span class="math" data-fb="h(0)=b₀">\(h(0)=b_0\)</span>（其余项全为零），此后每项只依赖已算出的 <span class="math" data-fb="h(n−k)">\(h(n-k)\)</span>。</span>
+    </div>
+
+    <div class="section-head" id="n2">
+      <h2>第二章 · DTFT 与 Z 变换</h2>
+      <p class="aside">48–49 · 64 · 68–69 · 73 · 91 页</p>
+    </div>
+
+    <p class="nsub"><span class="sn">2.1</span>DTFT 与 IDTFT 的推导</p>
+    <p class="np">从连续信号的理想抽样出发，把抽样序列写成冲激串再取傅里叶变换，<span class="math" data-fb="Ω">\(\Omega\)</span> 为连续角频率、<span class="math" data-fb="T">\(T\)</span> 为抽样间隔；求和提到积分号外，靠 δ 的筛选性质得 <span class="math" data-fb="X_s(jΩ)=Σ x(n)e^(−jΩnT)">\(X_s(j\Omega)=\sum x(n)e^{-j\Omega nT}\)</span>。令数字角频率 <span class="math" data-fb="w=ΩT">\(w=\Omega T\)</span>，即得 DTFT。</p>
+    <div class="eq" data-fb="X(e^jω)=Σ x(n)e^(−jωn)">
+      \[ X(e^{j\omega})=\sum_{n=-\infty}^{\infty}x(n)e^{-j\omega n} \]
+      <span class="cap">DTFT 以 <span class="math" data-fb="2π">\(2\pi\)</span> 为周期，这是抽样造成谱周期延拓在数字频率上的表现。</span>
+    </div>
+    <p class="np">逆变换：两边乘 <span class="math" data-fb="e^(jωm)">\(e^{j\omega m}\)</span> 后在 <span class="math" data-fb="[−π,π]">\([-\pi,\pi]\)</span> 上积分，靠复指数在整数上的正交性，只有 <span class="math" data-fb="n=m">\(n=m\)</span> 项留下。</p>
+    <div class="eq" data-fb="∫(−π..π) e^(j(n−m)ω)dω = 2π, n=m；= 0, n≠m">
+      \[ \int_{-\pi}^{\pi}e^{j(n-m)\omega}\,\mathrm{d}\omega=
+      \begin{cases}2\pi, & n=m\\ 0, & n\neq m\end{cases} \]
+      <span class="cap">等比数列在一个周期上积分为零；<span class="math" data-fb="n=m">\(n=m\)</span> 时被积函数恒为 1。</span>
+    </div>
+    <div class="eq" data-fb="x(n)=1/(2π) ∫(−π..π) X(e^jω)e^(jωn)dω">
+      \[ x(n)=\frac{1}{2\pi}\int_{-\pi}^{\pi}X(e^{j\omega})\,e^{j\omega n}\,\mathrm{d}\omega \]
+      <span class="cap">IDTFT，即例 2.2.1 要独立推完的那一式。</span>
+    </div>
+
+    <p class="nsub"><span class="sn">2.2</span>收敛域：由序列方向与端点判定</p>
+    <p class="np">含 <span class="math" data-fb="0">\(0\)</span> 要看 <span class="math" data-fb="n">\(n\)</span> 是否非正（<span class="math" data-fb="n₂≤0">\(n_2\le0\)</span>）；含 <span class="math" data-fb="∞">\(\infty\)</span> 要看 <span class="math" data-fb="n">\(n\)</span> 是否非负（<span class="math" data-fb="n₁≥0">\(n_1\ge0\)</span>）。</p>
+    <div class="kwrap">
+      <table class="tbl">
+        <thead><tr><th>类型</th><th>求和式</th><th>收敛域</th><th>端点</th></tr></thead>
+        <tbody>
+          <tr><td>有限长</td><td><span class="math">\(\sum_{n=n_1}^{n_2}\)</span></td><td><span class="math">\(0\lt|z|\lt\infty\)</span></td><td><span class="math">\(n_2\le0\)</span> 含 0；<span class="math">\(n_1\ge0\)</span> 含 ∞</td></tr>
+          <tr><td>双边</td><td><span class="math">\(\sum_{n=-\infty}^{\infty}\)</span></td><td><span class="math">\(R_{x-}\lt|z|\lt R_{x+}\)</span></td><td>环形，两端点都不含</td></tr>
+          <tr><td>右序列</td><td><span class="math">\(\sum_{n=n_1}^{\infty}\)</span></td><td><span class="math">\(R_{x-}\lt|z|\lt\infty\)</span></td><td>因果（<span class="math">\(n_1\ge0\)</span>）含 ∞</td></tr>
+          <tr><td>左序列</td><td><span class="math">\(\sum_{n=-\infty}^{n_2}\)</span></td><td><span class="math">\(0\lt|z|\lt R_{x+}\)</span></td><td>反因果（<span class="math">\(n_2\le0\)</span>）含 0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="np">一般有限长序列（<span class="math" data-fb="n₁&lt;0&lt;n₂">\(n_1\lt0\lt n_2\)</span>）的收敛域是挖掉原点的全平面，<span class="math" data-fb="0">\(0\)</span> 与 <span class="math" data-fb="∞">\(\infty\)</span> 都不含；只有序列仅在一侧有值时才会含端点。</p>
+
+    <p class="nsub"><span class="sn">2.3</span>逆 Z 变换：留数法</p>
+    <div class="eq" data-fb="x(n)=1/(2πj) ∮ X(z)z^(n−1)dz = Σ Res[X(z)z^(n−1), z_k]">
+      \[ x(n)=\frac{1}{2\pi j}\oint_{C}X(z)\,z^{n-1}\,\mathrm{d}z=\sum_{k}\mathrm{Res}\left[X(z)z^{n-1},\,z_k\right] \]
+      <span class="cap">围线 <span class="math">\(C\)</span> 取在收敛域内、逆时针；<span class="math" data-fb="z^(n−1)">\(z^{n-1}\)</span> 会让 <span class="math">\(z=0\)</span> 处极点阶数随 <span class="math">\(n\)</span> 变化。</span>
+    </div>
+    <div class="eq" data-fb="Res[F,z_k]=1/(m−1)! d^(m−1)/dz^(m−1)[(z−z_k)^m F(z)] |z=z_k">
+      \[ \mathrm{Res}\left[F(z),z_k\right]=\frac{1}{(m-1)!}\frac{\mathrm{d}^{m-1}}{\mathrm{d}z^{m-1}}\left[(z-z_k)^{m}F(z)\right]\Bigg|_{z=z_k} \]
+      <span class="cap">一阶极点直接代 <span class="math" data-fb="(z−z_k)F(z)">\((z-z_k)F(z)\)</span>；<span class="math" data-fb="m">\(m\)</span> 阶极点用这条。</span>
+    </div>
+    <p class="np"><b>留数辅助定理</b>：全平面留数之和为零，圆内极点留数之和等于圆外极点留数之和取负号；极点很多时用它把计算挪到另一侧。求逆前先定 <span class="math" data-fb="n">\(n\)</span> 的范围，因果部分取圆内极点、反因果部分取圆外极点。</p>
+    <div class="eq" data-fb="Σ(圆内) Res[F,z_k] = −Σ(圆外) Res[F,z_k]">
+      \[ \sum_{k=1}^{N}\mathrm{Res}\left[F(z),z_k\right]=-\sum_{k=1}^{M}\mathrm{Res}\left[F(z),z_k\right] \]
+      <span class="cap">左边为围线内极点，右边为围线外极点。</span>
+    </div>
+
+    <p class="nsub"><span class="sn">2.4</span>初值定理与终值定理</p>
+    <div class="eq" data-fb="x(0)=lim(z→∞)X(z)　；　lim x(n)=lim(z→1)(z−1)X(z)">
+      \[ x(0)=\lim_{z\to\infty}X(z)\ ,\qquad \lim_{n\to\infty}x(n)=\lim_{z\to1}(z-1)X(z) \]
+      <span class="cap">初值定理适用于因果序列（<span class="math">\(X(z)=x(0)+x(1)z^{-1}+\cdots\)</span>）。终值定理要求因果、且 <span class="math" data-fb="(z−1)X(z)">\((z-1)X(z)\)</span> 极点全在单位圆内（<span class="math">\(z=1\)</span> 只允许一阶）。</span>
+    </div>
+    <div class="proof">
+      <span class="plab">终值定理的证明</span>
+      <ul class="steps">
+        <li>写差分的 Z 变换：<span class="math" data-fb="(z−1)X(z)=Σ[x(n+1)−x(n)]z^(−n)">\((z-1)X(z)=\sum_{n=-\infty}^{\infty}\left[x(n+1)-x(n)\right]z^{-n}\)</span>。</li>
+        <li>令 <span class="math" data-fb="z→1">\(z\to1\)</span>，右端成望远镜求和：<span class="math" data-fb="x(0)+…+x(N) − [x(0)+…+x(N−1)]">\(\left[x(0)+\cdots+x(N)\right]-\left[x(0)+\cdots+x(N-1)\right]\)</span>。</li>
+        <li>中间项相消，只剩 <span class="math" data-fb="x(N)">\(x(N)\)</span>，即 <span class="math" data-fb="lim x(n)">\(\lim_{n\to\infty}x(n)\)</span>。</li>
+      </ul>
+    </div>
+
+    <p class="nsub"><span class="sn">2.5</span>DTFT 的对称性</p>
+    <p class="np">任意复序列拆成共轭对称与共轭反对称分量：<span class="math" data-fb="x_e(n)=x_e*(−n)">\(x_e(n)=x_e^{*}(-n)\)</span>、<span class="math" data-fb="x_o(n)=−x_o*(−n)">\(x_o(n)=-x_o^{*}(-n)\)</span>。由 <span class="math" data-fb="x(n)=x_e+x_o">\(x(n)=x_e(n)+x_o(n)\)</span>、把 <span class="math">\(n\)</span> 换成 <span class="math" data-fb="−n">\(-n\)</span> 再取共轭，两式相加减即得分解式。</p>
+    <div class="eq" data-fb="x_e(n)=1/2[x(n)+x*(−n)]；x_o(n)=1/2[x(n)−x*(−n)]">
+      \[ x_e(n)=\frac{1}{2}\left[x(n)+x^{*}(-n)\right]\ ,\qquad x_o(n)=\frac{1}{2}\left[x(n)-x^{*}(-n)\right] \]
+      <span class="cap">频域对应 <span class="math" data-fb="x_e ↔ X_E">\(x_e\leftrightarrow X_E\)</span>（共轭对称）、<span class="math" data-fb="x_o ↔ X_O">\(x_o\leftrightarrow X_O\)</span>（共轭反对称）；实部对应 <span class="math">\(X_R\)</span>、虚部对应 <span class="math">\(X_I\)</span>。实序列时幅度偶、相位奇。</span>
+    </div>
+    <div class="eq" data-fb="X_E(e^jω)=1/2[X(e^jω)+X*(e^(−jω))]；X_O(e^jω)=1/2[X(e^jω)−X*(e^(−jω))]">
+      \[ X_E(e^{j\omega})=\frac{1}{2}\left[X(e^{j\omega})+X^{*}(e^{-j\omega})\right]\ ,\qquad X_O(e^{j\omega})=\frac{1}{2}\left[X(e^{j\omega})-X^{*}(e^{-j\omega})\right] \]
+      <span class="cap">实序列满足 <span class="math" data-fb="X(e^jω)=X*(e^(−jω))">\(X(e^{j\omega})=X^{*}(e^{-j\omega})\)</span>，即频谱共轭对称。</span>
+    </div>
+
+    <div class="section-head" id="n3">
+      <h2>第三章 · 离散傅里叶变换（DFT）</h2>
+      <p class="aside">3.1.1 式 · 97 · 103 · 105–106 页</p>
+    </div>
+
+    <p class="nsub"><span class="sn">3.1</span>3.1.1 式的来源</p>
+    <p class="np">设 <span class="math" data-fb="x(n)">\(x(n)\)</span> 从 <span class="math">\(n=0\)</span> 起、长度 <span class="math" data-fb="M">\(M\)</span>，取 <span class="math" data-fb="N≥M">\(N\ge M\)</span> 补零；对 DTFT 在一个周期内等间隔取 <span class="math" data-fb="N">\(N\)</span> 点，<span class="math" data-fb="w_k=2πk/N">\(w_k=2\pi k/N\)</span>。</p>
+    <div class="eq" data-fb="X(k)=Σ(n=0..N−1) x(n)e^(−j2πkn/N)=Σ x(n)W_N^(kn)，W_N=e^(−j2π/N)">
+      \[ X(k)=\sum_{n=0}^{N-1}x(n)e^{-j\frac{2\pi}{N}kn}=\sum_{n=0}^{N-1}x(n)W_{N}^{kn}\ ,\qquad W_{N}=e^{-j\frac{2\pi}{N}} \]
+      <span class="cap">反变换差一个 <span class="math" data-fb="1/N">\(1/N\)</span> 与 <span class="math" data-fb="W_N^(−kn)">\(W_N^{-kn}\)</span>；等价于时域以 <span class="math">\(N\)</span> 为周期延拓后取主值。</span>
+    </div>
+    <div class="eq" data-fb="x(n)=(1/N)Σ(k=0..N−1) X(k)W_N^(−kn)">
+      \[ x(n)=\frac{1}{N}\sum_{k=0}^{N-1}X(k)W_{N}^{-kn}\ ,\qquad n=0,1,\dots,N-1 \]
+      <span class="cap">IDFT，只在 <span class="math" data-fb="0~N−1">\(0\sim N-1\)</span> 上取主值。</span>
+    </div>
+
+    <p class="nsub"><span class="sn">3.2</span>与 Z 变换、DTFT 的关系及物理含义</p>
+    <div class="eq" data-fb="X(k)=X(z)|(z=e^(j2πk/N))=X(e^jω)|(ω=2πk/N)">
+      \[ X(k)=X(z)\Big|_{z=e^{j\frac{2\pi}{N}k}}=X(e^{j\omega})\Big|_{\omega=\frac{2\pi}{N}k} \]
+      <span class="cap">DFT 是 Z 变换在单位圆上的 <span class="math">\(N\)</span> 点等间隔采样，也是 DTFT 在 <span class="math" data-fb="2π">\(2\pi\)</span> 周期上的 <span class="math">\(N\)</span> 点等间隔采样。</span>
+    </div>
+    <p class="np">相邻谱线间隔 <span class="math" data-fb="2π/N">\(2\pi/N\)</span>，对应模拟频率 <span class="math" data-fb="f_s/N">\(f_s/N\)</span>，这就是频率分辨率的来源：点数越多谱线越密。</p>
+
+    <p class="nsub"><span class="sn">3.3</span>循环移位性质</p>
+    <p class="np">循环移位把序列首尾接成环再转 <span class="math" data-fb="m">\(m\)</span> 格，结果始终落在 <span class="math" data-fb="0~N−1">\(0\sim N-1\)</span>，靠模 <span class="math">\(N\)</span> 折回：</p>
+    <div class="eq" data-fb="y(n)=x((n+m))_N R_N(n)，(n)_N 表示对 N 取模">
+      \[ y(n)=x\big((n+m)\big)_{N}R_{N}(n) \]
+      <span class="cap">括号下标 <span class="math">\(N\)</span> 表示模 <span class="math">\(N\)</span>；<span class="math" data-fb="R_N(n)">\(R_N(n)\)</span> 取主值区间。移出去的点从另一端绕回来，是环移不是平移。</span>
+    </div>
+    <div class="eq" data-fb="Y(k)=W_N^(−km)X(k)；Y(k)=X((k+l))_N R_N(k) ⇒ y(n)=W_N^(−ln)x(n)">
+      \[ Y(k)=W_{N}^{-km}X(k)\ ;\qquad Y(k)=X\big((k+l)\big)_{N}R_{N}(k)\ \Rightarrow\ y(n)=W_{N}^{-ln}x(n) \]
+      <span class="cap">方向看符号：时域左移（超前）<span class="math">\(m\)</span> 位带负指数；频域左移 <span class="math" data-fb="l">\(l\)</span> 位，时域乘 <span class="math" data-fb="W_N^(−ln)">\(W_N^{-ln}\)</span>。</span>
+    </div>
+
+    <p class="nsub"><span class="sn">3.4</span>循环卷积与频域卷积定理</p>
+    <div class="eq" data-fb="x(n)=[Σ(m) x₂(m)x₁((n−m))_N]R_N(n) ↔ X(k)=X₁(k)X₂(k)">
+      \[ x(n)=\left[\sum_{m=0}^{N-1}x_2(m)\,x_1\big((n-m)\big)_{N}\right]R_{N}(n)\ \longleftrightarrow\ X(k)=X_1(k)X_2(k) \]
+      <span class="cap">证明：把循环卷积代入 DFT 定义、交换求和次序，用 <span class="math" data-fb="Σ_k W_N^(k(n−m))=Nδ((n−m))_N">\(\sum_k W_N^{k(n-m)}=N\delta((n-m))_N\)</span>。</span>
+    </div>
+    <p class="np"><b>与线性卷积相等的条件</b>：<span class="math" data-fb="N ≥ N₁+N₂−1">\(N\ge N_1+N_2-1\)</span>。点数不够时尾部绕回前面发生时域混叠；用 DFT 算线性卷积，必须先补零到这个长度。</p>
+
+    <p class="nsub"><span class="sn">3.5</span>DFT 的对称性</p>
+    <p class="np">有限长序列按“模 <span class="math">\(N\)</span> 取反”定义对称，<span class="math" data-fb="(−n)">\((-n)\)</span> 写成 <span class="math" data-fb="N−n">\(N-n\)</span>，这就是第三章比第二章多出一个 <span class="math">\(N\)</span> 的原因。</p>
+    <div class="eq" data-fb="x_ep(n)=x_ep*(N−n)；x_op(n)=−x_op*(N−n)">
+      \[ x_{ep}(n)=x_{ep}^{*}(N-n)\ ,\qquad x_{op}(n)=-x_{op}^{*}(N-n)\ ,\qquad n=0,1,\dots,N-1 \]
+      <span class="cap">前者为有限长共轭对称序列，后者为共轭反对称；<span class="math">\(N\)</span> 为偶数时还有 <span class="math" data-fb="x_ep(N/2−n)=x_ep*(N/2+n)">\(x_{ep}(N/2-n)=x_{ep}^{*}(N/2+n)\)</span>，反对称加负号。</span>
+    </div>
+    <div class="eq" data-fb="x_ep(n)=1/2[x(n)+x*(N−n)]；x_op(n)=1/2[x(n)−x*(N−n)]">
+      \[ x_{ep}(n)=\frac{1}{2}\left[x(n)+x^{*}(N-n)\right]\ ,\qquad x_{op}(n)=\frac{1}{2}\left[x(n)-x^{*}(N-n)\right] \]
+      <span class="cap">由 <span class="math" data-fb="x(n)=x_ep+x_op">\(x(n)=x_{ep}(n)+x_{op}(n)\)</span> 把 <span class="math">\(n\)</span> 换成 <span class="math" data-fb="N−n">\(N-n\)</span> 取共轭，两式相加减得到。</span>
+    </div>
+
+    <p class="nsub"><span class="sn">3.6</span>频域采样定理</p>
+    <p class="np"><b>定理</b>：<span class="math" data-fb="x(n)">\(x(n)\)</span> 长度 <span class="math" data-fb="M">\(M\)</span>，频域取 <span class="math" data-fb="N">\(N\)</span> 点 <span class="math" data-fb="X(k)=X(e^(j2πk/N))">\(X(k)=X(e^{j2\pi k/N})\)</span>，令 <span class="math" data-fb="x_N(n)=IDFT[X(k)]">\(x_N(n)=\mathrm{IDFT}[X(k)]\)</span>。则 <span class="math" data-fb="N≥M">\(N\ge M\)</span> 时 <span class="math" data-fb="x_N(n)=x(n)">\(x_N(n)=x(n)\)</span>；<span class="math" data-fb="N&lt;M">\(N\lt M\)</span> 时发生时域混叠。</p>
+    <div class="proof">
+      <span class="plab">证明（四步）</span>
+      <ul class="steps">
+        <li>频域采样值：<span class="math" data-fb="X(k)=Σ(m=0..M−1)x(m)e^(−j2πkm/N)">\(X(k)=\sum_{m=0}^{M-1}x(m)e^{-j2\pi km/N}\)</span>，<span class="math" data-fb="k=0..N−1">\(k=0,1,\dots,N-1\)</span>。</li>
+        <li>做 <span class="math">\(N\)</span> 点 IDFT：<span class="math" data-fb="x_N(n)=1/N Σ_k X(k)W_N^(−kn)">\(x_N(n)=\frac{1}{N}\sum_{k=0}^{N-1}X(k)W_N^{-kn}\)</span>，代入 <span class="math">\(X(k)\)</span> 后交换求和次序。</li>
+        <li>讨论内层和 <span class="math" data-fb="1/N Σ_k e^(j2πk(n−m)/N)">\(\frac{1}{N}\sum_{k=0}^{N-1}e^{j\frac{2\pi}{N}k(n-m)}\)</span>：<span class="math" data-fb="n−m=iN">\(n-m=iN\)</span> 时为 1；否则是公比不为 1 的等比数列，和为零。</li>
+        <li>只剩 <span class="math" data-fb="n−m=iN">\(n-m=iN\)</span> 的项：<span class="math" data-fb="x_N(n)=Σ_i x(n+iN)">\(x_N(n)=\sum_i x(n+iN)\)</span>，<span class="math" data-fb="0≤n&lt;N">\(0\le n\lt N\)</span>。再分两种情况即得结论。</li>
+      </ul>
+    </div>
+    <div class="eq" data-fb="x_N(n)=Σ(i=−∞..∞) x(n+iN)，0≤n&lt;N">
+      \[ x_N(n)=\sum_{i=-\infty}^{\infty}x(n+iN)\ ,\qquad 0\le n\lt N \]
+      <span class="cap">频域 <span class="math">\(N\)</span> 点采样 ⇔ 时域以 <span class="math">\(N\)</span> 为周期延拓。这条既是恢复条件，也解释了频域采样引起的时域混叠。</span>
+    </div>
+
+    <div class="section-head" id="n4">
+      <h2>第四章 · 快速傅里叶变换（FFT）</h2>
+      <p class="aside">计算量对比</p>
+    </div>
+
+    <p class="nsub"><span class="sn">4.1</span>直接计算 <span class="math" data-fb="N">\(N\)</span> 点 DFT</p>
+    <p class="np">算一个 <span class="math" data-fb="k">\(k\)</span>：<span class="math">\(N\)</span> 次复乘、<span class="math" data-fb="N−1">\(N-1\)</span> 次复加；<span class="math">\(N\)</span> 个 <span class="math">\(k\)</span> 共</p>
+    <div class="eq" data-fb="复乘 N² 次；复加 N(N−1) 次">
+      \[ N^{2}\ \text{次复乘}\ ,\qquad N(N-1)\ \text{次复加} \]
+      <span class="cap">每个 <span class="math" data-fb="W_N^(kn)">\(W_N^{kn}\)</span> 都要现算，这是 <span class="math" data-fb="N²">\(N^2\)</span> 的来源。</span>
+    </div>
+
+    <p class="nsub"><span class="sn">4.2</span>基 2 FFT 的运算量</p>
+    <p class="np">不断对半分，分成 <span class="math" data-fb="log₂N">\(\log_2N\)</span> 级，每级 <span class="math" data-fb="N/2">\(N/2\)</span> 个蝶形；一个蝶形 = 1 次复乘 + 2 次复加。</p>
+    <div class="eq" data-fb="复乘 (N/2)log₂N 次；复加 N log₂N 次">
+      \[ \frac{N}{2}\log_{2}N\ \text{次复乘}\ ,\qquad N\log_{2}N\ \text{次复加} \]
+      <span class="cap">即 <span class="math" data-fb="N/2 × log₂N">\(N/2\times\log_2N\)</span> 个蝶形，每个 1 乘 2 加。</span>
+    </div>
+    <div class="kwrap">
+      <table class="tbl">
+        <thead><tr><th>点数</th><th class="num">DFT 复乘 <span class="math">\(N^2\)</span></th><th class="num">FFT 复乘 <span class="math">\((N/2)\log_2N\)</span></th><th class="num">倍数</th></tr></thead>
+        <tbody>
+          <tr><td>512</td><td class="num">262 144</td><td class="num">2 304</td><td class="num">≈ 114</td></tr>
+          <tr><td>1 024</td><td class="num">1 048 576</td><td class="num">5 120</td><td class="num">≈ 205</td></tr>
+          <tr><td>2 048</td><td class="num">4 194 304</td><td class="num">11 264</td><td class="num">≈ 372</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="np">点数翻倍，DFT 涨 4 倍，FFT 只涨约 2.2 倍，这就是 FFT 值得单独讲的原因。</p>
+
+    <div class="section-head" id="n5">
+      <h2>第五章 · 数字滤波器的结构</h2>
+      <p class="aside">IIR 四种 · FIR 两种</p>
+    </div>
+
+    <p class="nsub"><span class="sn">5.1</span>IIR 系统：四种结构</p>
+    <div class="eq" data-fb="y(n)=Σ(m=0..M) b_m x(n−m) − Σ(k=1..N) a_k y(n−k)；H(z)=Σb_m z^(−m)/(1+Σa_k z^(−k))">
+      \[ y(n)=\sum_{m=0}^{M}b_m\,x(n-m)-\sum_{k=1}^{N}a_k\,y(n-k)\ ,\qquad H(z)=\frac{\sum_{m=0}^{M}b_m z^{-m}}{1+\sum_{k=1}^{N}a_k z^{-k}} \]
+      <span class="cap">分母来自输出反馈，所以 IIR 一定带环路；<span class="math" data-fb="a_k≠0">\(a_k\neq0\)</span> 就是“无限长”的标志。</span>
+    </div>
+    <div class="kwrap">
+      <table class="tbl">
+        <thead><tr><th>结构</th><th>构成</th><th>特点</th></tr></thead>
+        <tbody>
+          <tr><td>直接Ⅰ型</td><td>零点链（<span class="math">\(b_m\)</span> 抽头）＋极点链（<span class="math">\(a_k\)</span> 反馈），延迟链分开</td><td>直观，延迟 <span class="math">\(M+N\)</span> 个，最多</td></tr>
+          <tr><td>直接Ⅱ型</td><td>先极点后零点，两条链共用延迟</td><td>延迟最少，<span class="math">\(\max(M,N)\)</span> 个</td></tr>
+          <tr><td>级联型</td><td>分解为二阶节相乘</td><td>零极点成对可调</td></tr>
+          <tr><td>并联型</td><td>部分分式展开，二阶节相加</td><td>各节独立，便于并行</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="np">画图抓两点：延迟支路 <span class="math" data-fb="z^(−1)">\(z^{-1}\)</span> 的方向、反馈支路的符号（<span class="math" data-fb="−a_k">\(-a_k\)</span> 写在加法器旁）。直接Ⅱ型把两条链的延迟合并，延迟数从 <span class="math" data-fb="M+N">\(M+N\)</span> 降到 <span class="math" data-fb="max(M,N)">\(\max(M,N)\)</span>。</p>
+
+    <p class="nsub"><span class="sn">5.2</span>FIR 系统：无反馈</p>
+    <div class="eq" data-fb="y(n)=Σ(k=0..N−1) h(k)x(n−k)；H(z)=Σ(n=0..N−1) h(n)z^(−n)">
+      \[ y(n)=\sum_{k=0}^{N-1}h(k)\,x(n-k)\ ,\qquad H(z)=\sum_{n=0}^{N-1}h(n)z^{-n} \]
+      <span class="cap">直接型即横截型：<span class="math" data-fb="N−1">\(N-1\)</span> 级延迟串联，抽头乘 <span class="math" data-fb="h(k)">\(h(k)\)</span> 后相加，无反馈。级联型把 <span class="math">\(H(z)\)</span> 分解成二阶节相乘；并联型极少使用。</span>
+    </div>
+
+    <div class="section-head" id="n6">
+      <h2>第六章 · IIR 数字滤波器设计</h2>
+      <p class="aside">186 · 215 页</p>
+    </div>
+
+    <p class="nsub"><span class="sn">6.1</span>巴特沃斯幅度平方特性</p>
+    <div class="eq" data-fb="|H_a(jΩ)|²=1/[1+(Ω/Ω_c)^(2N)]">
+      \[ \left|H_a(j\Omega)\right|^{2}=\frac{1}{1+\left(\Omega/\Omega_c\right)^{2N}} \]
+      <span class="cap"><span class="math" data-fb="Ω=0">\(\Omega=0\)</span> 时为 1；<span class="math" data-fb="Ω=Ω_c">\(\Omega=\Omega_c\)</span> 时为 <span class="math" data-fb="1/√2">\(1/\sqrt{2}\)</span>，即 −3 dB。<span class="math">\(N\)</span> 越大过渡带越陡、通带越平坦，幅频单调无波纹（最大平坦）。</span>
+    </div>
+
+    <p class="nsub"><span class="sn">6.2</span>低通设计：阶数与去归一化</p>
+    <div class="eq" data-fb="N ≥ lg√[(10^(αs/10)−1)/(10^(αp/10)−1)] / lg(Ω_s/Ω_p)">
+      \[ N\ge\frac{\lg\sqrt{\dfrac{10^{\alpha_s/10}-1}{10^{\alpha_p/10}-1}}}{\lg\left(\dfrac{\Omega_s}{\Omega_p}\right)} \]
+      <span class="cap">取不小于计算值的最小整数；<span class="math" data-fb="α_p">\(\alpha_p\)</span> 通带最大衰减、<span class="math" data-fb="α_s">\(\alpha_s\)</span> 阻带最小衰减、<span class="math" data-fb="Ω_p、Ω_s">\(\Omega_p,\Omega_s\)</span> 为通带与阻带边界。</span>
+    </div>
+    <div class="eq" data-fb="Ω_c=Ω_p(10^(0.1αp)−1)^(−1/2N)；Ω_c=Ω_s(10^(0.1αs)−1)^(−1/2N)">
+      \[ \Omega_c=\Omega_p\left(10^{0.1\alpha_p}-1\right)^{-\frac{1}{2N}}\ ,\qquad \Omega_c=\Omega_s\left(10^{0.1\alpha_s}-1\right)^{-\frac{1}{2N}} \]
+      <span class="cap">查表得归一化 <span class="math" data-fb="G_a(p)">\(G_a(p)\)</span> 后去归一化：把 <span class="math" data-fb="p=s/Ω_c">\(p=s/\Omega_c\)</span> 代入；高通把 <span class="math" data-fb="p=Ω_c/s">\(p=\Omega_c/s\)</span> 代入。</span>
+    </div>
+
+    <p class="nsub"><span class="sn">6.3</span>两种由模拟到数字的映射</p>
+    <div class="eq" data-fb="H(z)=Σ(i) A_i/[1−e^(s_iT)z^(−1)]">
+      \[ H(z)=\sum_{i=1}^{N}\frac{A_i}{1-e^{s_iT}z^{-1}} \]
+      <span class="cap">脉冲响应不变法：对 <span class="math">\(H_a(s)\)</span> 做部分分式，逐项把极点 <span class="math" data-fb="s_i">\(s_i\)</span> 映成 <span class="math" data-fb="e^(s_iT)">\(e^{s_iT}\)</span>；频谱周期延拓会混叠，不适合高通、带阻。</span>
+    </div>
+    <div class="eq" data-fb="s=(2/T)(1−z^(−1))/(1+z^(−1))；Ω=(2/T)tan(ω/2)">
+      \[ s=\frac{2}{T}\cdot\frac{1-z^{-1}}{1+z^{-1}}\ ,\qquad \Omega=\frac{2}{T}\tan\frac{\omega}{2} \]
+      <span class="cap">双线性变换：先把 <span class="math">\(s\)</span> 平面虚轴压进 <span class="math" data-fb="(−π/T,π/T)">\((-\pi/T,\pi/T)\)</span>，再用 <span class="math" data-fb="z=e^(sT)">\(z=e^{sT}\)</span> 映到单位圆，两次都单调、一对一，故无混叠，但频率轴非线性畸变，截止频率须先预畸变。</span>
+    </div>
+
+    <div class="section-head" id="n7">
+      <h2>第七章 · FIR 数字滤波器设计：窗函数法</h2>
+      <p class="aside">243 页</p>
+    </div>
+
+    <p class="nsub"><span class="sn">7.1</span>吉布斯效应：加窗截断的代价</p>
+    <p class="np">理想冲激响应 <span class="math" data-fb="h_d(n)">\(h_d(n)\)</span> 无限长、不可实现，用窗 <span class="math" data-fb="w(n)">\(w(n)\)</span> 截成长度 <span class="math" data-fb="N">\(N\)</span> 的 <span class="math" data-fb="h(n)">\(h(n)\)</span>。时域相乘对应频域卷积，误差就表现为吉布斯效应。</p>
+    <div class="eq" data-fb="h(n)=h_d(n)w(n) ⇒ H(e^jω)=1/(2π) H_d(e^jω)*W(e^jω)">
+      \[ h(n)=h_d(n)\,w(n)\ \Longrightarrow\ H(e^{j\omega})=\frac{1}{2\pi}H_d(e^{j\omega})*W(e^{j\omega}) \]
+      <span class="cap">所以成品的频响是理想特性与窗谱的卷积，窗谱形状直接决定误差形态。</span>
+    </div>
+    <div class="proof">
+      <span class="plab">三个表现</span>
+      <ul class="steps">
+        <li>理想特性不连续点 <span class="math" data-fb="ω=ω_c">\(\omega=\omega_c\)</span> 处形成过渡带，宽度约等于窗谱主瓣宽度（矩形窗 <span class="math" data-fb="4π/N">\(4\pi/N\)</span>）。</li>
+        <li>通带内出现波纹，峰值在 <span class="math" data-fb="ω_c−2π/N">\(\omega_c-2\pi/N\)</span> 附近。</li>
+        <li>阻带内出现余振，最大峰值在 <span class="math" data-fb="ω_c+2π/N">\(\omega_c+2\pi/N\)</span> 附近，幅度由窗谱旁瓣决定（矩形窗约 −21 dB）。</li>
+      </ul>
+    </div>
+    <p class="np"><b>结论</b>：通带波纹影响平坦度，阻带余振抬高旁瓣、降低衰减，可能不满足指标。增大 <span class="math" data-fb="N">\(N\)</span> 只让过渡带变窄、振荡变密，最大过冲（约 9%）不减小；要压低旁瓣必须换窗型（汉宁、海明、布莱克曼）。</p>
+
+  </div>
+
+  <footer class="sheet-foot">
+    <span>复习要点整理 · 页码与例题序号均以本课教材为准。</span>
+    <span>公式使用 KaTeX 排版，离线打开时回退为纯文本。</span>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+  // 字号切换
+  var sizes=[16,17.5,19], key='dsp-merge-fs';
+  var idx=parseInt(localStorage.getItem(key)||'0',10);
+  if(isNaN(idx)||idx<0||idx>2){idx=0;}
+  var btn=document.getElementById('fsBtn');
+  function applyFs(){
+    document.documentElement.style.setProperty('--read-fs', sizes[idx]+'px');
+    btn.textContent='字号 '+sizes[idx];
+    localStorage.setItem(key,String(idx));
+  }
+  btn.addEventListener('click',function(){ idx=(idx+1)%sizes.length; applyFs(); });
+  applyFs();
+
+  // 选项卡切换
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  var views={
+    d:document.getElementById('view-d'),
+    q:document.getElementById('view-q'),
+    n:document.getElementById('view-n')
+  };
+  var hintList=document.getElementById('questionList');
+  function show(id,scroll){
+    if(!views[id]){id='d';}
+    tabs.forEach(function(t){
+      var on=t.dataset.view===id;
+      t.classList.toggle('on',on);
+      t.setAttribute('aria-selected',on?'true':'false');
+    });
+    Object.keys(views).forEach(function(v){ views[v].hidden=(v!==id); });
+    if(scroll){
+      var top=document.querySelector('.tabs').getBoundingClientRect().top+window.pageYOffset-64;
+      window.scrollTo({top:Math.max(top,0),behavior:'smooth'});
+    }
+    try{ history.replaceState(null,'','#'+id); }catch(e){}
+  }
+  tabs.forEach(function(t){ t.addEventListener('click',function(){ show(t.dataset.view,true); }); });
+  var initial=(location.hash||'').replace('#','');
+  show(views[initial]?initial:'d',false);
+
+  // 考点提示开关
+  var hintBtn=document.getElementById('hintToggle');
+  if(hintBtn && hintList){
+    hintBtn.addEventListener('click',function(){
+      var off=hintList.classList.toggle('hints-off');
+      hintBtn.setAttribute('aria-pressed',off?'true':'false');
+      hintBtn.querySelector('span').textContent=off?'显示考点提示':'隐藏考点提示';
+    });
+  }
+
+  // 公式渲染（失败时回退到纯文本）
+  function renderMath(){
+    if(window.katex && window.renderMathInElement){
+      try{
+        renderMathInElement(document.body,{
+          delimiters:[
+            {left:'\\(',right:'\\)',display:false},
+            {left:'\\[',right:'\\]',display:true},
+            {left:'$$',right:'$$',display:true}
+          ],
+          throwOnError:false
+        });
+        return;
+      }catch(e){}
+    }
+    [].forEach.call(document.querySelectorAll('[data-fb]'),function(el){
+      el.textContent=el.getAttribute('data-fb');
+    });
+  }
+  function go(){
+    renderMath();
+    var hash=(location.hash||'').replace('#','');
+    if(hash==='q'||hash==='n'){ show(hash,false); }
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',go);
+  }else{
+    go();
+  }
+})();
+</script>
+</body>
+</html>
